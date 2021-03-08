@@ -1,0 +1,60 @@
+#include "rwmake.ch"        // incluido pelo assistente de conversao do AP5 IDE em 19/11/99
+
+User Function Codbardg()        // incluido pelo assistente de conversao do AP5 IDE em 19/11/99
+
+//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+//³ Declaracao de variaveis utilizadas no programa atraves da funcao    ³
+//³ SetPrvt, que criara somente as variaveis definidas pelo usuario,    ³
+//³ identificando as variaveis publicas do sistema utilizadas no codigo ³
+//³ Incluido pelo assistente de conversao do AP5 IDE                    ³
+//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+SetPrvt("LRET,CSTR,I,NMULT,NMODULO,CCHAR")
+SetPrvt("CDIGITO,CDV1,CDV2,CDV3,CCAMPO1,CCAMPO2")
+SetPrvt("CCAMPO3,NVAL,NCALC_DV1,NCALC_DV2,NCALC_DV3,NREST")
+
+/*/
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦Funçào    ¦ CODBARDG ¦ Autor ¦ Eliana Pinto          ¦ Data ¦ 29/03/05 ¦¦¦
+¦¦+----------+------------------------------------------------------------¦¦¦
+¦¦¦Descriçào ¦ Calculo do codigo de barras a partir da linha digitavel    ¦¦¦
+¦¦+-----------------------------------------------------------------------+¦¦
+¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+/*/
+
+If ValType(M->E2_LINDIG) == NIL
+   Return(SPACE(LEN(SE2->E2_CODBAR)))
+EndIf
+
+cStr := Alltrim(M->E2_LINDIG)
+       
+cCodBar := M->E2_CODBAR
+
+If Len(cStr) == 47
+
+   cCodBar := PADR(Substr(cStr,1,4)+Substr(cStr,33,15)+Substr(cStr,5,5)+Substr(cStr,11,10)+Substr(cStr,22,10),LEN(SE2->E2_CODBAR))
+
+ElseIf Len(cStr) == 48
+   
+   // Monta o Codigo de Barras	
+   cCodBar := PADR(Substr(cStr,1,11)+Substr(cStr,13,11)+Substr(cStr,25,11)+Substr(cStr,37,11),LEN(SE2->E2_CODBAR))
+
+EndIf                       
+
+Return(cCodBar)
+
+///////////////////////////////////////////
+// FUNCAO PARA VALIDAR A LINHA DIGITAVEL //
+// MONTES - 03/2016                      //
+///////////////////////////////////////////
+User Function CODBARLD()
+Local cStr := Alltrim(M->E2_LINDIG)
+
+cStr := STRTRAN(cStr," ","")
+cStr := STRTRAN(cStr,".","")
+cStr := STRTRAN(cStr,"-","")
+cStr := STRTRAN(cStr,"/","")
+M->E2_LINDIG := PADR(cStr,LEN(SE2->E2_LINDIG))
+
+Return .T.
